@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Scrapy settings for crowdfund_crawler project
 #
 # For simplicity, this file contains only settings considered important or
@@ -64,9 +62,9 @@ DOWNLOAD_DELAY = 1
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'crowdfund_crawler.pipelines.CrowdfundCrawlerPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'crowdfund_crawler.pipelines.ValidationPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -88,3 +86,6 @@ DOWNLOAD_DELAY = 1
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# Feed
+FEED_EXPORT_ENCODING = 'utf-8'
