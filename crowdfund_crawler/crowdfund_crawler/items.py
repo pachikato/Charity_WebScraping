@@ -14,7 +14,7 @@ class DonationProject(scrapy.Item):
     # name = scrapy.Field()
     project_name = scrapy.Field()
     donation = scrapy.Field()
-    return_list = scrapy.Field():
+    return_list = scrapy.Field()
 
 
 class DonationProjectLoader(ItemLoader):
