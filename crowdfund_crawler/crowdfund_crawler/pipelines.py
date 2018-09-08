@@ -11,14 +11,16 @@ class CrowdfundCrawlerPipeline(object):
     def process_item(self, item, spider):
         return item
 
+
 class ValidationPipeline(object):
     """
     Itemを検証するPipeline
     """
 
     def process_item(self, item, spider):
+        # ここに書いた項目が取得できなかった場合はエラーにする
         if not item['project_name']:
-            # project_nameフィールドが取得できていない場合は破棄する。
             raise DropItem('Missing project_name')
-
+        if not item['donation_unit_price']:
+            raise DropItem('Missing donation_unit_price')
         return item

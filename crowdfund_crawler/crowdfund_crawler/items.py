@@ -10,13 +10,19 @@ import re
 
 
 class DonationProject(scrapy.Item):
+    # 時系列で変化しない、固定の取得項目
     project_name = scrapy.Field()
-    end_date = scrapy.Field()
+    system = scrapy.Field()
+    end_date = scrapy.Field() # プロジェクトの期日、期日から二日以上経過したプロジェクトは取得しない
+    category = scrapy.Field()
     donation_unit_price = scrapy.Field()
     return_list = scrapy.Field()
+    source = scrapy.Field() # 取得元、今回であればReadyfor かCampfireの２択
+    created_at = scrapy.Field()
 
 
 class DonationLog(scrapy.Item):
+    # 時系列の取得項目
     access_date = scrapy.Field()
     project_name = scrapy.Field()
     donation_unit_price = scrapy.Field()
@@ -66,6 +72,7 @@ class DonationLoader(ItemLoader):
     default_output_processor = TakeFirst()
 
     # 各フィールドに個別のプロセッサ
+    ## DonationProjectクラスとDonationLogで定義したアイテム名から、'アイテム名'_in　の命名規則で記述している
     project_name_in = MapCompose(
         _ProcRemoveEndsBlank
         , _ProcRemoveEmBlank
@@ -78,4 +85,10 @@ class DonationLoader(ItemLoader):
         , _ProcRemoveComma
         , _ProcCastNumeric
     )
-
+    patron_in = MapCompose(
+        _ProcRemoveBlank
+        , _ProcRemoveEmBlank
+        , _ProcConvertKanji
+        , _ProcRemoveComma
+        , _ProcCastNumeric
+    )
