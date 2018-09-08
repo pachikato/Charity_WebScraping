@@ -10,14 +10,20 @@ import re
 
 
 class DonationProject(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
     project_name = scrapy.Field()
-    donation = scrapy.Field()
+    end_date = scrapy.Field()
+    donation_unit_price = scrapy.Field()
     return_list = scrapy.Field()
 
 
-class DonationProjectLoader(ItemLoader):
+class DonationLog(scrapy.Item):
+    access_date = scrapy.Field()
+    project_name = scrapy.Field()
+    donation_unit_price = scrapy.Field()
+    patron = scrapy.Field()
+
+
+class DonationLoader(ItemLoader):
     default_input_processor = Identity()
     default_output_processor = Identity()
 
@@ -37,7 +43,7 @@ class DonationProjectLoader(ItemLoader):
         return s.replace('　', '')
 
     # カンマ除去
-    def _ProcReomveComma(s):
+    def _ProcRemoveComma(s):
         return s.replace(',', '')
 
     # 先頭プラス除去
@@ -59,4 +65,17 @@ class DonationProjectLoader(ItemLoader):
     default_input_processor = MapCompose(_ProcRemoveEndsBlank)
     default_output_processor = TakeFirst()
 
-    project_name_in = MapCompose(_ProcRemoveEndsBlank, _ProcRemoveEmBlank)
+    # 各フィールドに個別のプロセッサ
+    project_name_in = MapCompose(
+        _ProcRemoveEndsBlank
+        , _ProcRemoveEmBlank
+    )
+    donation_unit_price_in = MapCompose(
+        _ProcRemoveEndsBlank
+        , _ProcRemoveEmBlank
+        , _ProcRemoveHeadPlus
+        , _ProcConvertKanji
+        , _ProcRemoveComma
+        , _ProcCastNumeric
+    )
+

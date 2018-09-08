@@ -1,5 +1,5 @@
 import scrapy
-from crowdfund_crawler.items import DonationProject, DonationProjectLoader
+from crowdfund_crawler.items import DonationProject, DonationLog, DonationLoader
 
 
 class CampfireSpider(scrapy.Spider):
@@ -31,10 +31,27 @@ class CampfireSpider(scrapy.Spider):
         self.logger.info('Start project page parsing.')
 
         # プロジェクトごとの項目を抜き出す
-        item_loader = DonationProjectLoader(item=DonationProject(), response=response)
+        log_loader = DonationLoader(item=DonationLog(), response=response)
 
-        item_loader.add_xpath('project_name', "//div[@class='header_top']/h2[@class='header_top__title']/text()")
+        
+        # プロジェクトごとの項目を抜き出す
+        for return_section in response.xpath("//aside[@id='return__section']"):
+            project_loader = DonationLoader(item=DonationProject(), response=response)
+            
+            # プロジェクト名
+            project_loader.add_xpath('project_name', "//div[@class='header_top']/h2[@class='header_top__title']/text()")
 
-        yield item_loader.load_item()
+            # 寄付金額
+            donation_unit_price = return_section.xpath(".//div[@class='return__price']/span/text()").extract_first()
+
+            # リターン
+            return_list = return_section.xpath(".//p[@class='return__list readmore']/text()").extract()
+            
+            project_loader.add_value('donation_unit_price', donation_unit_price)
+            project_loader.add_value('return_list', return_list) 
+            
+            yield project_loader.load_item()
+            
+        # yield project_loader.load_item()
 
         self.logger.info('Complete project page parsing.')
