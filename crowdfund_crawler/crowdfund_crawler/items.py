@@ -15,6 +15,7 @@ class DonationProject(scrapy.Item):
     system = scrapy.Field()
     end_date = scrapy.Field() # プロジェクトの期日、期日から二日以上経過したプロジェクトは取得しない
     category = scrapy.Field()
+    donation_idx = scrapy.Field()
     donation_unit_price = scrapy.Field()
     return_list = scrapy.Field()
     source = scrapy.Field() # 取得元、今回であればReadyfor かCampfireの２択
@@ -25,6 +26,7 @@ class DonationLog(scrapy.Item):
     # 時系列の取得項目
     access_date = scrapy.Field()
     project_name = scrapy.Field()
+    donation_idx = scrapy.Field()
     donation_unit_price = scrapy.Field()
     patron = scrapy.Field()
 
@@ -42,7 +44,10 @@ class DonationLoader(ItemLoader):
 
     # 文字列の両端にある文字列だけ削除
     def _ProcRemoveEndsBlank(s):
-        return s.strip()
+        if type(s) is str:
+            return s.strip()
+        else:
+            return s
 
     # 全角スペースを全て削除
     def _ProcRemoveEmBlank(s):
