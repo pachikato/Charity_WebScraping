@@ -64,6 +64,7 @@ DOWNLOAD_DELAY = 1
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'crowdfund_crawler.pipelines.ValidationPipeline': 300,
+    'crowdfund_crawler.pipelines.PostgreSQLPipeline': 800,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
