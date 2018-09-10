@@ -51,6 +51,8 @@ class CampfireSpider(scrapy.Spider):
             return_list = return_section.xpath(".//p[@class='return__list readmore']/text()").extract()
             # パトロン
             patron = return_section.xpath(".//div[@class='return__info']/text()").re_first(r'(?<=パトロン：)(.*)(?=人)')
+            # ストック　
+            stock = '-1'
 
             # 募集期間で変化しない項目をproject_loaderに追加
             project_loader = DonationLoader(item=DonationProject(), response=response)
@@ -71,6 +73,7 @@ class CampfireSpider(scrapy.Spider):
             log_loader.add_value('donation_idx', donation_idx)
             log_loader.add_value('donation_unit_price', donation_unit_price)
             log_loader.add_value('patron', patron)
+            log_loader.add_value('stock', stock)
 
             # 寄付内容のidを更新する
             donation_idx += 1

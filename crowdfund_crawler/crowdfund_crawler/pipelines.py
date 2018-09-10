@@ -1,5 +1,5 @@
 from scrapy.exceptions import DropItem
-import psycopg2 
+import psycopg2
 
 
 # Define your item pipelines here
@@ -78,9 +78,10 @@ class PostgreSQLPipeline(object):
             CREATE TABLE IF NOT EXISTS donation_log (
                 access_date DATE,
                 project_name VARCHAR(1024),
-                donation_idx INTEGER, 
+                donation_idx INTEGER,
                 donation_unit_price BIGINT,
-                patron bigint,
+                patron BIGINT,
+                stock BIGINT,
                 UNIQUE (access_date, project_name, donation_idx)
             )
         ''')
@@ -140,6 +141,7 @@ class PostgreSQLPipeline(object):
                     , donation_idx
                     , donation_unit_price
                     , patron
+                    , stock
                 )
                 VALUES (
                     %(access_date)s
@@ -147,9 +149,10 @@ class PostgreSQLPipeline(object):
                     , %(donation_idx)s
                     , %(donation_unit_price)s
                     , %(patron)s
+                    , %(stock)s
                 )
                 ON CONFLICT ON CONSTRAINT donation_log_access_date_project_name_donation_idx_key
-                DO UPDATE SET patron=%(patron)s
+                DO UPDATE SET patron=%(patron)s, stock=%(stock)s
             '''
             , dict(item['donation_log'])
         )
