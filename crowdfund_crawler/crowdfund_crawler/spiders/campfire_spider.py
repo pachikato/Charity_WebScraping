@@ -1,3 +1,11 @@
+
+### how to run by hand
+#1. command "activate scrapyenv" on cmd
+#2. change directory by typing "E:" and "cd hoge"
+#3. run by command "scrapy crawl campfire_spider -o campfire.jl"
+#4. Open by SQLWorkbenck.exe
+###################
+
 import scrapy
 from crowdfund_crawler.items import DonationProject, DonationLog, DonationLoader
 from datetime import datetime
