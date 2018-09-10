@@ -21,7 +21,7 @@ class ReadyforSpider(scrapy.Spider):
             yield response.follow(nextpage,self.parse)
 
     def parse_project(self,response):
-        project_name = response.xpath("//h1[name(..)='div'][../@class='Project-visual__title']/a/text()").extract()
+        project_name = response.xpath("//h1[name(..)='div'][../@class='Project-visual__title']/a/text()").extract_first()
         system = response.xpath("//div[contains(@class,'project-attributes-badge')]/div[2]/text()").extract_first()
         end_date = response.xpath("//div[contains(@class,'Project-visual__body')]/p/text()").re(r'\d{1,2}月\d{1,2}日')[0]
         for i in range(1, len(response.xpath("//section[@class='Project-return Side-area-1 u-mb_20']").extract())):
