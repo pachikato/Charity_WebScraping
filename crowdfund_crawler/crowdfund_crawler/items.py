@@ -29,6 +29,7 @@ class DonationLog(scrapy.Item):
     donation_idx = scrapy.Field()
     donation_unit_price = scrapy.Field()
     patron = scrapy.Field()
+    stock = scrapy.Field()
 
 
 class DonationLoader(ItemLoader):
@@ -91,6 +92,13 @@ class DonationLoader(ItemLoader):
         , _ProcCastNumeric
     )
     patron_in = MapCompose(
+        _ProcRemoveBlank
+        , _ProcRemoveEmBlank
+        , _ProcConvertKanji
+        , _ProcRemoveComma
+        , _ProcCastNumeric
+    )
+    stock_in = MapCompose(
         _ProcRemoveBlank
         , _ProcRemoveEmBlank
         , _ProcConvertKanji
